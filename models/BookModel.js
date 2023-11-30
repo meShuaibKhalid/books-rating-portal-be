@@ -10,7 +10,9 @@ const Book = sequelize.define(
     title: { type: Sequelize.STRING, allowNull: false },
     publish_date: { type: Sequelize.STRING },
     category: { type: Sequelize.STRING, allowNull: false },
-    rating: { type: Sequelize.FLOAT, allowNull: true } 
+    rating: { type: Sequelize.FLOAT, allowNull: true },
+    location: { type: Sequelize.STRING},
+    isLocationBestSeller: { type: Sequelize.BOOLEAN, defaultValue: false},
   },
   { freezeTableName: true }
 );
