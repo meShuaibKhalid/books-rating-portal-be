@@ -55,6 +55,7 @@ router.post("/login", async (req, res) => {
           name: user.name,
           email: user.email,
           address: user.address,
+          role: user.role
         };
         // Respond with the generated token
         res.status(200).json(userWithoutPassword);
@@ -108,24 +109,34 @@ router.get("/:id", async (req, res) => {
 
 // Update a user by ID
 router.put("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    // Update the user with the provided data
-    const [, updatedUser] = await User.update(req.body, {
-      where: { id: parseInt(req.params.id, 10) },
-      returning: true,
-    });
+    const user = await User.findByPk(parseInt(id, 10));
 
-    // Check if the user was updated
-    if (updatedUser[0]) {
-      // Respond with the updated user
-      res.status(200).json(updatedUser[0]);
-    } else {
-      // Respond with a 404 status if the user is not found
-      res.status(404).json({ error: "User not found" });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
+
+    // Update the user with the provided data
+    Object.assign(user, req.body);
+
+    // Save the updated user
+    await user.save();
+
+    // Respond with the created user and skip password for security reasons
+    const userWithoutPassword = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      role: user.role
+    };
+
+    // Respond with the updated user
+    res.status(200).json(userWithoutPassword);
   } catch (error) {
-    // Handle errors and respond with an error message
-    res.status(500).json({ error: error.message });
+    // Handle errors and respond with a generic error message
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
