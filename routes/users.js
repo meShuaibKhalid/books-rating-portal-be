@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
       name: user.name,
       email: user.email,
       address: user.address,
+      image: user.image
     };
 
     res.status(201).json(userWithoutPassword);
@@ -55,7 +56,8 @@ router.post("/login", async (req, res) => {
           name: user.name,
           email: user.email,
           address: user.address,
-          role: user.role
+          role: user.role,
+          image: user.image
         };
         // Respond with the generated token
         res.status(200).json(userWithoutPassword);
@@ -95,8 +97,17 @@ router.get("/:id", async (req, res) => {
 
     // Check if the user exists
     if (user) {
+      // Respond with the created user and skip password for security reasons
+    const userWithoutPassword = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      address: user.address,
+      role: user.role,
+      image: user.image
+    };
       // Respond with the user if found
-      res.status(200).json(user);
+      res.status(200).json(userWithoutPassword);
     } else {
       // Respond with a 404 status if the user is not found
       res.status(404).json({ error: "User not found" });
@@ -129,7 +140,8 @@ router.put("/:id", async (req, res) => {
       name: user.name,
       email: user.email,
       address: user.address,
-      role: user.role
+      role: user.role,
+      image: user.image
     };
 
     // Respond with the updated user
