@@ -49,7 +49,48 @@ router.get("/:id", async (req, res) => {
       // Check if the book exists
       if (book) {
         // Respond with the book if found
-        res.status(200).json(user);
+        res.status(200).json(book);
+      } else {
+        // Respond with a 404 status if the book is not found
+        res.status(404).json({ error: "data not found" });
+      }
+    } catch (error) {
+      // Handle errors and respond with an error message
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  router.get("/getBestSeller", async (req, res) => {
+    try {
+      const books = await Book.findAll({
+        where: { isLocationBestSeller: true }
+    });
+  
+      // Check if the book exists
+      if (books) {
+        // Respond with the book if found
+        res.status(200).json(books);
+      } else {
+        // Respond with a 404 status if the book is not found
+        res.status(404).json({ error: "data not found" });
+      }
+    } catch (error) {
+      // Handle errors and respond with an error message
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  router.get("/getBestSeller/:city", async (req, res) => {
+    const city = req.params.city.trim().toLowerCase();
+    try {
+      const books = await Book.findAll({
+        where: { location: city }
+    });
+  
+      // Check if the book exists
+      if (books) {
+        // Respond with the book if found
+        res.status(200).json(books);
       } else {
         // Respond with a 404 status if the book is not found
         res.status(404).json({ error: "data not found" });
