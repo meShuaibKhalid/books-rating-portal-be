@@ -6,19 +6,10 @@ const router = require('express').Router();
 router.post("/addBook",
     // adminAvatar.single('file'),
     async (req, res) => {
-        let image;
         try {
-            const { abstract, author, title, publish_date, category, rating, location, isLocationBestSeller } = req.body;
-            if (typeof req.file == "undefined") {
-                return res
-                    .status(500)
-                    .json({ success: false, msg: "image is undefiend " });
-            }
-            if (req.file.location) {
-                image = req.file.location
-            }
+            const { abstract, author, title, publish_date, category, rating, location, isLocationBestSeller, image, addedBy } = req.body;
             const book = await Book.create({
-                image: image,
+                image,
                 abstract,
                 author,
                 title,
@@ -26,7 +17,8 @@ router.post("/addBook",
                 category,
                 rating,
                 location,
-                isLocationBestSeller
+                isLocationBestSeller,
+                addedBy
             });
             res.status(201).json(book);
         } catch (error) {
