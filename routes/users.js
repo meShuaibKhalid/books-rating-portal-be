@@ -98,14 +98,14 @@ router.get("/:id", async (req, res) => {
     // Check if the user exists
     if (user) {
       // Respond with the created user and skip password for security reasons
-    const userWithoutPassword = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      address: user.address,
-      role: user.role,
-      image: user.image
-    };
+      const userWithoutPassword = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        role: user.role,
+        image: user.image
+      };
       // Respond with the user if found
       res.status(200).json(userWithoutPassword);
     } else {

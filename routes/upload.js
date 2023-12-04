@@ -18,6 +18,7 @@ const upload = multer({ dest: "uploads/" });
  * @returns Unique file attributes
  */
 function getUniqueFileAttr(file) {
+  if (!file) return;
   const filePath = `uploads/${file.path.split("\\")[1]}`; // Our local file path ** backend/uploads/ **
 
   // Creates a unique file name to handle files with the same name
