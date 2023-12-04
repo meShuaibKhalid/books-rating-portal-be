@@ -1,14 +1,16 @@
 const User = require("../models/userModel");
 const Review = require('../models/ReviewModel');
+const Book = require('../models/BookModel');
 const router = require('express').Router();
 
 router.post("/addreview", async (req, res) => {
     try {
-        const { title, book_id, book_name, user_id, rating } = req.body;
+        const { title, book_id, book_name, user_name, user_id, rating } = req.body;
         const review = await Review.create({
             title,
             book_id,
             book_name,
+            user_name,
             user_id,
             rating
         });
@@ -56,18 +58,26 @@ router.get("/userReveiw/:id", async (req, res) => {
             res.status(404).json({ error: "no review found" });
         }
 
-        user_reviews = book_reviews.map((review) => {
-            const updatedReview = { ...review.dataValues };
-            updatedReview.user_id = user;
-            return updatedReview;
-        })
+        user_reviews = await Promise.all(book_reviews.map(async (review) => {
+            const book = await Book.findOne({
+                where: {
+                    id: parseInt(review.book_id, 10)
+                }
+            });
+            if (book) {
+                const updatedReview = { ...review.dataValues };
+                updatedReview.book = { ...book.dataValues };
+                updatedReview.user_id = user;
+                return updatedReview;
+            }
+        }));
 
         res.status(200).json(user_reviews);
-        
+
     } catch (error) {
-    // Handle errors and respond with an error message
-    res.status(500).json({ error: error.message });
-}
+        // Handle errors and respond with an error message
+        res.status(500).json({ error: error.message });
+    }
 });
 
 module.exports = router;
