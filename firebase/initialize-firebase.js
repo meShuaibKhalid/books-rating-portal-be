@@ -4,7 +4,7 @@ const serviceAccount = require("../client-secret.json");
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
-  storageBucket: process.env.FIREBASE_BUCKET
+  storageBucket: process.env.FIREBASE_BUCKET,
 });
 
 // Creating a bucket reference
